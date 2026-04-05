@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GameVoucher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f1923;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #2a3a4a;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00e5ff;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #ff3e78;
+        }
+
+        .login-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+        }
+
+        .login-box {
+            background-color: #1a2a38;
+            border-radius: 10px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #a0aec0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 5px;
+            border: 1px solid #2a3a4a;
+            background-color: #0f1923;
+            color: #ffffff;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #00e5ff;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: none;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .btn-login {
+            background-color: #00e5ff;
+            color: #0f1923;
+            width: 100%;
+        }
+
+        .btn-login:hover {
+            background-color: #00c2e0;
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: #a0aec0;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .social-login p:before,
+        .social-login p:after {
+            content: "";
+            position: absolute;
+            height: 1px;
+            width: 30%;
+            background-color: #2a3a4a;
+            top: 50%;
+        }
+
+        .social-login p:before {
+            left: 0;
+        }
+
+        .social-login p:after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-social {
+            background-color: transparent;
+            border: 1px solid #2a3a4a;
+            color: #ffffff;
+            padding: 10px 15px;
+            width: 120px;
+        }
+
+        .btn-social:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .signup-link a {
+            color: #00e5ff;
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input {
+            margin-right: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #a0aec0;
+            font-size: 14px;
+            border-top: 1px solid #2a3a4a;
+        }
+
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <a href="index.html" class="logo">Game<span>Voucher</span></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Enter your credentials to access your account</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="forgot-password.html">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-login">Login</button>
+            </form>
+
+            <div class="social-login">
+                <p>Or login with</p>
+                <div class="social-buttons">
+                    <button class="btn btn-social">Google</button>
+                    <button class="btn btn-social">Facebook</button>
+                </div>
+            </div>
+
+            <div class="signup-link">
+                Don't have an account? <a href="signup.html">Sign up</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 GameVoucher. All rights reserved. This is a college project.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (email && password) {
+                const userData = {
+                    firstName: "Purnayoo",
+                    lastName: "",
+                    email: email,
+                    plan: "basic",
+                    credits: 100
+                };
+
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('userData', JSON.stringify(userData));
+
+
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Please enter both email and password!');
+            }
+        });
+    </script>
+</body>
+
+</html>

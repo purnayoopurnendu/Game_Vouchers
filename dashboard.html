@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GameVoucher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f1923;
+            color: #ffffff;
+            line-height: 1.6;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #162635;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #2a3a4a;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00e5ff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .logo span {
+            color: #ff3e78;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #2a3a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #00e5ff;
+        }
+
+        .user-details {
+            font-size: 14px;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-plan {
+            color: #00e5ff;
+            font-size: 12px;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active,
+        .menu-item:hover {
+            background-color: #1a2c3d;
+            color: #ffffff;
+            border-left: 4px solid #00e5ff;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            border: none;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: #00e5ff;
+            color: #0f1923;
+        }
+
+        .btn-primary:hover {
+            background-color: #00c2e0;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #2a3a4a;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: #1a2a38;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: rgba(0, 229, 255, 0.1);
+            color: #00e5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            font-size: 14px;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .col-8 {
+            flex: 8;
+        }
+
+        .col-4 {
+            flex: 4;
+        }
+
+        .card {
+            background-color: #1a2a38;
+            border-radius: 10px;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-action {
+            color: #00e5ff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .card-action:hover {
+            text-decoration: underline;
+        }
+
+        .game-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, #162534, #1f3447);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+        }
+
+        .game-image {
+            height: 120px;
+            background-color: #293c51;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-image i {
+            font-size: 40px;
+            color: #00e5ff;
+        }
+
+        .game-details {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .game-category {
+            color: #a0aec0;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .voucher-list {
+            margin-top: 15px;
+        }
+
+        .voucher-item {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #162534;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .voucher-item:hover {
+            transform: translateX(5px);
+        }
+
+        .voucher-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: #293c51;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .voucher-icon i {
+            color: #00e5ff;
+            font-size: 20px;
+        }
+
+        .voucher-details {
+            flex: 1;
+        }
+
+        .voucher-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .voucher-expires {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .voucher-value {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: #00e5ff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .upcoming-game {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #162534;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .upcoming-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: #293c51;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .upcoming-icon i {
+            color: #ff3e78;
+            font-size: 24px;
+        }
+
+        .upcoming-details {
+            flex: 1;
+        }
+
+        .upcoming-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .upcoming-time {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .upcoming-time i {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .row {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 0;
+            }
+
+            .logo {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .sidebar-header {
+                padding: 0 10px 15px;
+            }
+
+            .user-info,
+            .logo span,
+            .user-details,
+            .menu-item span {
+                display: none;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+
+            .menu-item i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .game-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .game-list {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo">Game<span>Voucher</span></a>
+                <div class="user-info">
+                    <div class="user-avatar" id="userInitials">JS</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">John Smith</div>
+                        <div class="user-plan" id="userPlan">Premium Plan</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="games.html" class="menu-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="Reward.html" class="menu-item">
+                    <i class="fas fa-gift"></i>
+                    <span>Voucher Marketplace</span>
+                </a>
+                <a href="vouchers.html" class="menu-item">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>My Vouchers</span>
+                </a>
+                <a href="leaderboard.html" class="menu-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <a href="history.html" class="menu-item">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </a>
+                <a href="setting.html" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="index.html" class="menu-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1 class="page-title">Welcome back, <span id="welcomeName">John</span>!</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-coins"></i>
+                        <span id="userCredits">0</span> Credits
+                    </button>
+                    <button class="btn btn-primary" onclick="window.location.href='games.html'">
+                        <i class="fas fa-plus"></i>
+                        Play Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="stat-value" id="gamesPlayedValue">27</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-value" id="highScoreValue">1,245</div>
+                    <div class="stat-label">Highest Score</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="stat-value" id="vouchersEarnedValue">8</div>
+                    <div class="stat-label">Vouchers Earned</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value" id="rankValue">#42</div>
+                    <div class="stat-label">Global Rank</div>
+                </div>
+            </div>
+
+            <!-- Games and Rewards Section -->
+            <div class="row">
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Popular Games</h2>
+                            <a href="games.html" class="card-action">View All</a>
+                        </div>
+
+                        <div class="game-list">
+                            <div class="game-card" onclick="window.location.href='flipcoin.html'">
+                                <div class="game-image">
+                                    <img src="game1img.jpg" height="100%" width="100%">
+                                </div>
+                                <div class="game-details">
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> 5.2k players</span>
+                                        <span><i class="fas fa-trophy"></i> 100 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="game-card" onclick="window.location.href='diceroll.html'">
+                                <div class="game-image">
+                                    <img src="game2img.jpg" height="100%" width="100%">
+                                </div>
+                                <div class="game-details">
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> 4.8k players</span>
+                                        <span><i class="fas fa-trophy"></i> 150 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="game-card" onclick="window.location.href='memorycard.html'">
+                                <div class="game-image">
+                                    <img src="game3img.jpg" height="100%" width="100%">
+                                </div>
+                                <div class="game-details">
+                                    <h3 class="game-title">Memory Master</h3>
+                                    <div class="game-category">Quiz</div>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> 2.5k players</span>
+                                        <span><i class="fas fa-trophy"></i> 50 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="game-card">
+                                <div class="game-image">
+                                    <img src="game7img.jpg" height="100%" width="100%">
+                                </div>
+                                <div class="game-details">
+                                    <h3 class="game-title">Super Mario</h3>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> 2.1k players</span>
+                                        <span><i class="fas fa-trophy"></i> 40 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="game-card">
+                                <div class="game-image">
+                                    <img src="game8img.jpg" height="100%" width="100%">
+                                </div>
+                                <div class="game-details">
+                                    <h3 class="game-title">Ramp Race</h3>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> 3.7k players</span>
+                                        <span><i class="fas fa-trophy"></i> 80 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="game-card">
+                                <div class="game-image">
+                                    <img src="game9img.jpg" height="100%" width="100%">
+                                </div>
+                                <div class="game-details">
+                                    <h3 class="game-title">Hill Climb</h3>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> 2.7k players</span>
+                                        <span><i class="fas fa-trophy"></i> 65 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="game-card" onclick="window.location.href='rps.html'">
+                                <div class="game-image">
+                                    <i class="fas fa-hand-rock"></i>
+                                </div>
+                                <div class="game-details">
+                                    <h3 class="game-title">Rock Paper Scissors</h3>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> New</span>
+                                        <span><i class="fas fa-trophy"></i> 10 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="game-card" onclick="window.location.href='numberguess.html'">
+                                <div class="game-image">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                <div class="game-details">
+                                    <h3 class="game-title">Number Guess</h3>
+                                    <div class="game-stats">
+                                        <span><i class="fas fa-users"></i> New</span>
+                                        <span><i class="fas fa-trophy"></i> 20 pts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Your Vouchers</h2>
+                            <a href="vouchers.html" class="card-action">View All</a>
+                        </div>
+
+                        <div class="voucher-list">
+                            <div class="voucher-item">
+                                <div class="voucher-icon">
+                                    <i class="fas fa-film"></i>
+                                </div>
+                                <div class="voucher-details">
+                                    <div class="voucher-name">Netflix 1-Month</div>
+                                    <div class="voucher-expires">Expires in 15 days</div>
+                                </div>
+                                <div class="voucher-value">$15</div>
+                            </div>
+
+                            <div class="voucher-item">
+                                <div class="voucher-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="voucher-details">
+                                    <div class="voucher-name">UberEats Discount</div>
+                                    <div class="voucher-expires">Expires in 7 days</div>
+                                </div>
+                                <div class="voucher-value">$10</div>
+                            </div>
+
+                            <div class="voucher-item">
+                                <div class="voucher-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div class="voucher-details">
+                                    <div class="voucher-name">Amazon Gift Card</div>
+                                    <div class="voucher-expires">Expires in 30 days</div>
+                                </div>
+                                <div class="voucher-value">$20</div>
+                            </div>
+                        </div>
+
+                        <div class="card-header" style="margin-top: 30px; margin-bottom: 15px;">
+                            <h2 class="card-title">Upcoming Tournaments</h2>
+                        </div>
+
+                        <div class="upcoming-game">
+                            <div class="upcoming-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="upcoming-details">
+                                <div class="upcoming-title">Weekend Challenge</div>
+                                <div class="upcoming-time">
+                                    <i class="far fa-clock"></i> Starts in 2 days
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="upcoming-game">
+                            <div class="upcoming-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="upcoming-details">
+                                <div class="upcoming-title">Trivia Championship</div>
+                                <div class="upcoming-time">
+                                    <i class="far fa-clock"></i> Starts in 5 days
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isLoggedIn = localStorage.getItem('loggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                if (userData.firstName) {
+                    document.getElementById('welcomeName').textContent = userData.firstName || "Player";
+                    document.getElementById('userName').textContent = userData.firstName + ' ' + (userData.lastName || '');
+
+                    const initials = (userData.firstName.charAt(0) + (userData.lastName ? userData.lastName.charAt(0) : '')).toUpperCase();
+                    document.getElementById('userInitials').textContent = initials;
+                }
+
+                if (userData.plan) {
+                    const planFormatted = userData.plan.charAt(0).toUpperCase() + userData.plan.slice(1);
+                    document.getElementById('userPlan').textContent = planFormatted + ' Plan';
+
+                    let credits = userData.credits || 0;
+                    document.getElementById('userCredits').textContent = credits;
+                    if (userData.plan === 'premium') credits = 300;
+                    if (userData.plan === 'ultimate') credits = 500;
+
+                    document.getElementById('userCredits').textContent = credits;
+                }
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                localStorage.removeItem('loggedIn');
+                window.location.href = 'index.html';
+            });
+        });
+        function showPopup(message) {
+            const popup = document.createElement("div");
+            popup.innerText = message;
+
+            popup.style.position = "fixed";
+            popup.style.top = "20px";
+            popup.style.right = "20px";
+            popup.style.background = "#00e5ff";
+            popup.style.color = "#000";
+            popup.style.padding = "10px 15px";
+            popup.style.borderRadius = "8px";
+            popup.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+            popup.style.zIndex = "9999";
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.remove();
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

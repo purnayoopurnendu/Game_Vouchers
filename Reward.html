@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards - GameVoucher</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana,sans-serif;}
+        body{background-color:#0f1923;color:#fff;line-height:1.6;user-select:none;}
+        .dashboard-container{display:flex;min-height:100vh;}
+        .sidebar{width:250px;background-color:#162635;padding:20px 0;position:fixed;height:100vh;overflow-y:auto;}
+        .sidebar-header{padding:0 20px 20px;border-bottom:1px solid #2a3a4a;}
+        .logo{font-size:24px;font-weight:700;color:#00e5ff;text-decoration:none;display:block;margin-bottom:5px;}
+        .logo span{color:#ff3e78;}
+        .user-info{display:flex;align-items:center;margin-top:20px;}
+        .user-avatar{width:40px;height:40px;border-radius:50%;background-color:#2a3a4a;display:flex;align-items:center;justify-content:center;margin-right:10px;font-weight:bold;color:#00e5ff;}
+        .user-details{font-size:14px;}
+        .user-name{font-weight:600;}
+        .user-plan{color:#00e5ff;font-size:12px;}
+        .sidebar-menu{padding:20px 0;}
+        .menu-item{padding:12px 20px;display:flex;align-items:center;color:#a0aec0;text-decoration:none;transition:all 0.3s;}
+        .menu-item.active,.menu-item:hover{background-color:#1a2c3d;color:#fff;border-left:4px solid #00e5ff;}
+        .menu-item i{margin-right:10px;font-size:18px;}
+        .main-content{flex:1;padding:30px;margin-left:250px;}
+        .dashboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+        .page-title{font-size:24px;font-weight:700;}
+        .header-actions{display:flex;gap:15px;}
+        .btn{padding:10px 15px;border-radius:5px;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;border:none;}
+        .btn i{margin-right:8px;}
+        .btn-primary{background-color:#00e5ff;color:#0f1923;}
+        .btn-primary:hover{background-color:#00c2e0;}
+        .btn-outline{background-color:transparent;color:#fff;border:1px solid #2a3a4a;}
+        .btn-outline:hover{background-color:rgba(255,255,255,0.05);}
+        .rewards-tabs{display:flex;margin-bottom:10px;background-color:#162635;border-radius:10px;overflow:hidden;}
+        .tab-btn{flex:1;padding:15px;text-align:center;background-color:transparent;border:none;color:#a0aec0;font-weight:600;cursor:pointer;transition:all 0.3s;}
+        .tab-btn.active{background-color:#1a2c3d;color:#00e5ff;box-shadow:0 2px 0 #00e5ff;}
+        .tab-btn:hover:not(.active){background-color:rgba(26,44,61,0.5);color:#fff;}
+        .rewards-filters{margin-bottom:20px;}
+        .rewards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:30px;}
+        .reward-card{background-color:#1a2a38;border-radius:10px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;}
+        .reward-card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.2);}
+        .reward-header{padding:15px;background-color:#162534;display:flex;align-items:center;justify-content:space-between;}
+        .reward-category{font-size:12px;color:#a0aec0;background-color:rgba(160,174,192,0.1);padding:3px 8px;border-radius:4px;}
+        .reward-image{height:140px;background-color:#243a4f;display:flex;align-items:center;justify-content:center;}
+        .reward-image i{font-size:48px;color:#00e5ff;}
+        .reward-details{padding:15px;}
+        .reward-title{font-size:18px;font-weight:600;margin-bottom:10px;}
+        .reward-description{color:#a0aec0;font-size:14px;margin-bottom:15px;height:60px;overflow:hidden;}
+        .reward-footer{display:flex;justify-content:space-between;align-items:center;}
+        .reward-price{font-weight:700;color:#00e5ff;font-size:20px;}
+        @media(max-width:992px){.rewards-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(max-width:768px){.sidebar{width:70px;padding:15px 0;}.logo{font-size:20px;text-align:center;}.sidebar-header{padding:0 10px 15px;}.user-info,.logo span,.user-details,.menu-item span{display:none;}.menu-item{justify-content:center;padding:15px 0;}.menu-item i{margin-right:0;font-size:20px;}.main-content{margin-left:70px;padding:20px;}}
+        @media(max-width:576px){.rewards-grid{grid-template-columns:1fr;}.dashboard-header{flex-direction:column;align-items:flex-start;gap:15px;}}
+        .filter-select {
+    background-color: #162635;
+    color: #a0aec0;
+    border: 1px solid #2a3a4a;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 200px;
+}
+
+.filter-select:hover {
+    background-color: #1a2c3d;
+    border-color: #00e5ff;
+    color: #ffffff;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #00e5ff;
+    box-shadow: 0 0 5px #00e5ff;
+}
+
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo">Game<span>Voucher</span></a>
+            <div class="user-info">
+                <div class="user-avatar" id="userInitials">JS</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">John Smith</div>
+                    <div class="user-plan" id="userPlan">Premium Plan</div>
+                </div>
+            </div>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item"><i class="fas fa-home"></i><span>Dashboard</span></a>
+            <a href="#" class="menu-item"><i class="fas fa-gamepad"></i><span>Games</span></a>
+            <a href="#" class="menu-item active"><i class="fas fa-gift"></i><span>Voucher Marketplace</span></a>
+            <a href="#" class="menu-item"><i class="fas fa-ticket-alt"></i><span>My Vouchers</span></a>
+            <a href="#" class="menu-item"><i class="fas fa-trophy"></i><span>Leaderboard</span></a>
+            <a href="#" class="menu-item"><i class="fas fa-history"></i><span>History</span></a>
+            <a href="#" class="menu-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+            <a href="#" class="menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="dashboard-header">
+            <h1 class="page-title">Voucher Marketplace</h1>
+            <div class="header-actions">
+                <button class="btn btn-outline"><i class="fas fa-coins"></i><span id="userCredits">500</span> Credits</button>
+            </div>
+        </div>
+
+        <div class="rewards-tabs">
+            <button class="tab-btn active" data-tab="all">All Rewards</button>
+            <button class="tab-btn" data-tab="gaming">Gaming</button>
+            <button class="tab-btn" data-tab="streaming">Streaming</button>
+            <button class="tab-btn" data-tab="food">Food & Drinks</button>
+            <button class="tab-btn" data-tab="shopping">Shopping</button>
+        </div>
+
+        <div class="rewards-filters">
+
+            <select id="voucherFilter" class="filter-select">
+                <option value="all">Sort / Filter</option>
+                <option value="low-to-high">Price: Low to High</option>
+                <option value="high-to-low">Price: High to Low</option>
+                <option value="affordable">Affordable with my Credits</option>
+            </select>
+            
+        </div>
+
+        <div class="rewards-grid">
+            <!-- Gaming Vouchers -->
+            <div class="reward-card" data-category="gaming">
+                <div class="reward-header"><div class="reward-category">Gaming</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.8</div></div>
+                <div class="reward-image"><i class="fab fa-steam"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Steam Gift Card</h3>
+                    <p class="reward-description">Redeem for games, software, hardware, and more on Steam.</p>
+                    <div class="reward-footer"><div class="reward-price">250 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <div class="reward-card" data-category="gaming">
+                <div class="reward-header"><div class="reward-category">Gaming</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.7</div></div>
+                <div class="reward-image"><i class="fab fa-playstation"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">PlayStation Store</h3>
+                    <p class="reward-description">Get PlayStation gift cards for games, add-ons, and subscriptions.</p>
+                    <div class="reward-footer"><div class="reward-price">300 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <div class="reward-card" data-category="gaming">
+                <div class="reward-header"><div class="reward-category">Gaming</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 5.0</div></div>
+                <div class="reward-image"><i class="fab fa-xbox"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Xbox Gift Card</h3>
+                    <p class="reward-description">Use on Xbox console or Microsoft store for games and subscriptions.</p>
+                    <div class="reward-footer"><div class="reward-price">280 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <!-- Streaming Vouchers -->
+            <div class="reward-card" data-category="streaming">
+                <div class="reward-header"><div class="reward-category">Streaming</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.6</div></div>
+                <div class="reward-image"><i class="fab fa-spotify"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Spotify Premium</h3>
+                    <p class="reward-description">Stream unlimited music without ads with Spotify Premium subscription.</p>
+                    <div class="reward-footer"><div class="reward-price">200 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <div class="reward-card" data-category="streaming">
+                <div class="reward-header"><div class="reward-category">Streaming</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.5</div></div>
+                <div class="reward-image"><i class="fab fa-netflix"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Netflix Gift Card</h3>
+                    <p class="reward-description">Enjoy unlimited movies and TV shows with Netflix gift card.</p>
+                    <div class="reward-footer"><div class="reward-price">250 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <!-- Food & Drinks -->
+            <div class="reward-card" data-category="food">
+                <div class="reward-header"><div class="reward-category">Food & Drinks</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.9</div></div>
+                <div class="reward-image"><i class="fas fa-hamburger"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">McDonald's Voucher</h3>
+                    <p class="reward-description">Get a tasty meal at McDonald's with this voucher.</p>
+                    <div class="reward-footer"><div class="reward-price">150 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <div class="reward-card" data-category="food">
+                <div class="reward-header"><div class="reward-category">Food & Drinks</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.8</div></div>
+                <div class="reward-image"><i class="fas fa-coffee"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Starbucks Voucher</h3>
+                    <p class="reward-description">Enjoy your favorite coffee with Starbucks voucher.</p>
+                    <div class="reward-footer"><div class="reward-price">180 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <!-- Shopping -->
+            <div class="reward-card" data-category="shopping">
+                <div class="reward-header"><div class="reward-category">Shopping</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 5.0</div></div>
+                <div class="reward-image"><i class="fas fa-shopping-bag"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Amazon Voucher</h3>
+                    <p class="reward-description">Use this Amazon voucher for electronics, clothes, and more.</p>
+                    <div class="reward-footer"><div class="reward-price">1000 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+
+            <div class="reward-card" data-category="shopping">
+                <div class="reward-header"><div class="reward-category">Shopping</div><div class="reward-rating"><i class="fas fa-star" style="color:#FFD700;"></i> 4.7</div></div>
+                <div class="reward-image"><i class="fas fa-shopping-cart"></i></div>
+                <div class="reward-details">
+                    <h3 class="reward-title">Flipkart Voucher</h3>
+                    <p class="reward-description">Get a wide range of products from Flipkart using this voucher.</p>
+                    <div class="reward-footer"><div class="reward-price">350 Credits</div><button class="btn btn-primary">Buy</button></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const tabs=document.querySelectorAll('.tab-btn');
+        const rewardCards=document.querySelectorAll('.reward-card');
+        const voucherFilter=document.getElementById('voucherFilter');
+
+        tabs.forEach(tab=>{
+            tab.addEventListener('click', function(){
+                tabs.forEach(t=>t.classList.remove('active'));
+                this.classList.add('active');
+                const category=this.getAttribute('data-tab');
+                rewardCards.forEach(card=>{
+                    card.style.display=(category==='all'||card.getAttribute('data-category')===category)?'block':'none';
+                });
+                voucherFilter.value='all';
+            });
+        });
+
+        voucherFilter.addEventListener('change', function(){
+            const filterValue=this.value;
+            const userCredits=parseInt(document.getElementById('userCredits').textContent);
+            let visibleCards=Array.from(rewardCards).filter(card=>card.style.display!=='none');
+
+            if(filterValue==='low-to-high'){
+                visibleCards.sort((a,b)=>parseInt(a.querySelector('.reward-price').textContent.replace(' Credits',''))-parseInt(b.querySelector('.reward-price').textContent.replace(' Credits','')));
+            }else if(filterValue==='high-to-low'){
+                visibleCards.sort((a,b)=>parseInt(b.querySelector('.reward-price').textContent.replace(' Credits',''))-parseInt(a.querySelector('.reward-price').textContent.replace(' Credits','')));
+            }else if(filterValue==='affordable'){
+                visibleCards.forEach(card=>{
+                    const price=parseInt(card.querySelector('.reward-price').textContent.replace(' Credits',''));
+                    card.style.display=(price<=userCredits)?'block':'none';
+                });
+                return;
+            }
+            const grid=document.querySelector('.rewards-grid');
+            visibleCards.forEach(card=>grid.appendChild(card));
+        });
+    });
+    // Buy button functionality
+const userCreditsElem = document.getElementById('userCredits');
+
+document.querySelectorAll('.reward-card .btn-primary').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const priceElem = this.closest('.reward-card').querySelector('.reward-price');
+        const price = parseInt(priceElem.textContent.replace(' Credits',''));
+        let credits = parseInt(userCreditsElem.textContent);
+
+        if(credits >= price){
+            credits -= price;
+            userCreditsElem.textContent = credits;
+            alert('Purchase successful!');
+        } else {
+            alert('Not enough credits!');
+        }
+    });
+});
+
+</script>
+</body>
+</html>

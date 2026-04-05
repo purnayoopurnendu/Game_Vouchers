@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rock Paper Scissors</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #162534;
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+        }
+
+        .buttons {
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 8px;
+            background: #00e5ff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #00bcd4;
+            transform: scale(1.1);
+        }
+
+        button:active {
+            transform: scale(0.9);
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.3s;
+        }
+
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00e5ff;
+            color: black;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake {
+            animation: shake 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>✊✋✌️ RPS Game</h1>
+
+        <div class="buttons">
+            <button onclick="play('rock')">✊ Rock</button>
+            <button onclick="play('paper')">✋ Paper</button>
+            <button onclick="play('scissors')">✌️ Scissors</button>
+        </div>
+
+        <h2 id="result"></h2>
+    </div>
+
+    <script>
+        const choices = ["rock", "paper", "scissors"];
+        const REWARD = 10;
+        const PENALTY = 5;
+
+        function play(userChoice) {
+            let computerChoice = choices[Math.floor(Math.random() * 3)];
+            let resultText = "";
+
+            let resultEl = document.getElementById("result");
+            resultEl.style.opacity = 0;
+
+            if (userChoice === computerChoice) {
+                resultText = "Draw 🤝";
+                showPopup("Draw 🤝");
+            } else if (
+                (userChoice === "rock" && computerChoice === "scissors") ||
+                (userChoice === "paper" && computerChoice === "rock") ||
+                (userChoice === "scissors" && computerChoice === "paper")
+            ) {
+                resultText = "You Win 🎉";
+                updateCredits(REWARD);
+                showPopup("+10 Credits 🎉");
+                playSound(true);
+            } else {
+                resultText = "You Lose 😢";
+                updateCredits(-PENALTY);
+                showPopup("-5 Credits 😢");
+                playSound(false);
+
+                document.querySelector(".card").classList.add("shake");
+                setTimeout(() => {
+                    document.querySelector(".card").classList.remove("shake");
+                }, 300);
+            }
+
+            setTimeout(() => {
+                resultEl.innerText =
+                    `You: ${userChoice} | Computer: ${computerChoice} → ${resultText}`;
+
+                resultEl.style.opacity = 1;
+                resultEl.style.transform = "translateY(0)";
+            }, 200);
+        }
+
+        function updateCredits(amount) {
+            let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+            if (!userData.credits) userData.credits = 100;
+
+            userData.credits = Math.max(0, userData.credits + amount);
+
+            localStorage.setItem("userData", JSON.stringify(userData));
+        }
+
+        function showPopup(text) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerText = text;
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => popup.remove(), 2000);
+        }
+
+        function playSound(win) {
+            let audio = new Audio(
+                win
+                    ? "https://www.soundjay.com/buttons/sounds/button-4.mp3"
+                    : "https://www.soundjay.com/buttons/sounds/button-10.mp3"
+            );
+            audio.play();
+        }
+    </script>
+
+</body>
+
+</html>

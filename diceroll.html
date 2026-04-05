@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roll Game with Score</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0f1923;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #1a2a38;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            color: #ffffff;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-top: 0;
+        }
+
+        .dice {
+            width: 100px;
+            height: 100px;
+            margin: 30px auto;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+        }
+
+        .dice-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .die-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
+
+        .rolling {
+            animation: roll 1s ease-in-out;
+        }
+
+        @keyframes roll {
+            0% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+            }
+
+            25% {
+                transform: rotateX(90deg) rotateY(180deg) rotateZ(45deg);
+            }
+
+            50% {
+                transform: rotateX(180deg) rotateY(90deg) rotateZ(90deg);
+            }
+
+            75% {
+                transform: rotateX(270deg) rotateY(270deg) rotateZ(135deg);
+            }
+
+            100% {
+                transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg);
+            }
+        }
+
+        .result {
+            height: 30px;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
+        }
+
+
+
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+
+
+        .win-modal {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+            width: 85%;
+            max-width: 350px;
+            text-align: center;
+            border: 2px solid #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .win-modal h2 {
+            margin-top: 0;
+            color: #00e5ff;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .win-modal .credits-earned {
+            font-size: 24px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .win-modal .score-info {
+            color: #a0aec0;
+            margin: 10px 0;
+        }
+
+        .win-modal button {
+            background-color: #00e5ff;
+            color: #0f1923;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .win-modal button:hover {
+            background-color: #00c2e0;
+        }
+
+        .win-modal #back-to-games {
+            background-color: #6c757d;
+            margin-left: 10px;
+        }
+
+        .win-modal #back-to-games:hover {
+            background-color: #5a6268;
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .choice-button {
+            background-color: #00e5ff;
+            padding: 12px 20px;
+            width: 50px;
+            color: #0f1923;
+        }
+
+        .choice-button:hover {
+            background-color: #00c2e0;
+        }
+
+        .choice-button.selected {
+            background-color: #00c2e0;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.5);
+        }
+
+        .dice-dot {
+            width: 14px;
+            height: 14px;
+            background-color: #333;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .dot-1 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .two .dot-1 {
+            top: 25%;
+            left: 25%;
+            transform: none;
+        }
+
+        .two .dot-2 {
+            bottom: 25%;
+            right: 25%;
+        }
+
+        .three .dot-1 {
+            top: 25%;
+            left: 25%;
+            transform: none;
+        }
+
+        .three .dot-2 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .three .dot-3 {
+            bottom: 25%;
+            right: 25%;
+        }
+
+        .four .dot-1 {
+            top: 25%;
+            left: 25%;
+            transform: none;
+        }
+
+        .four .dot-2 {
+            top: 25%;
+            right: 25%;
+        }
+
+        .four .dot-3 {
+            bottom: 25%;
+            left: 25%;
+        }
+
+        .four .dot-4 {
+            bottom: 25%;
+            right: 25%;
+        }
+
+        .five .dot-1 {
+            top: 25%;
+            left: 25%;
+            transform: none;
+        }
+
+        .five .dot-2 {
+            top: 25%;
+            right: 25%;
+        }
+
+        .five .dot-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .five .dot-4 {
+            bottom: 25%;
+            left: 25%;
+        }
+
+        .five .dot-5 {
+            bottom: 25%;
+            right: 25%;
+        }
+
+        .six .dot-1 {
+            top: 25%;
+            left: 25%;
+            transform: none;
+        }
+
+        .six .dot-2 {
+            top: 25%;
+            right: 25%;
+        }
+
+        .six .dot-3 {
+            top: 50%;
+            left: 25%;
+            transform: translateY(-50%);
+        }
+
+        .six .dot-4 {
+            top: 50%;
+            right: 25%;
+            transform: translateY(-50%);
+        }
+
+        .six .dot-5 {
+            bottom: 25%;
+            left: 25%;
+        }
+
+        .six .dot-6 {
+            bottom: 25%;
+            right: 25%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dice Roll Game</h1>
+
+        <div id="game-area">
+            <p>Guess what number will come up, then roll the die. Keep playing until you guess wrong!</p>
+
+            <div class="choice-buttons">
+                <button id="one-button" class="choice-button">1</button>
+                <button id="two-button" class="choice-button">2</button>
+                <button id="three-button" class="choice-button">3</button>
+                <button id="four-button" class="choice-button">4</button>
+                <button id="five-button" class="choice-button">5</button>
+                <button id="six-button" class="choice-button">6</button>
+            </div>
+
+
+
+            <div class="dice">
+                <div class="dice-inner" id="dice">
+                    <div class="die-face one">
+                        <span class="dice-dot dot-1"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result" id="result"></div>
+
+            <button id="roll-button" disabled>Roll Dice</button>
+        </div>
+
+
+
+        <div id="win-modal" class="win-modal">
+            <h2>🎉 You Won! 🎉</h2>
+            <div class="credits-earned">+<span id="credits-earned">0</span> Credits</div>
+
+            <p>Great job! Your credits have been added to your account.</p>
+            <button id="continue-playing">Continue Playing</button>
+            <button id="back-to-games">Back to Games</button>
+        </div>
+    </div>
+    <script src="app.js"></script>
+   <script>
+    const dice = document.getElementById('dice');
+    const rollButton = document.getElementById('roll-button');
+    const result = document.getElementById('result');
+    const gameArea = document.getElementById('game-area');
+    const winModal = document.getElementById('win-modal');
+    const creditsEarned = document.getElementById('credits-earned');
+    const continuePlayingButton = document.getElementById('continue-playing');
+    const backToGamesButton = document.getElementById('back-to-games');
+
+    const REWARD = 15;
+    const PENALTY = 7;
+
+    const numberButtons = [
+        document.getElementById('one-button'),
+        document.getElementById('two-button'),
+        document.getElementById('three-button'),
+        document.getElementById('four-button'),
+        document.getElementById('five-button'),
+        document.getElementById('six-button')
+    ];
+
+    let isRolling = false;
+    let userChoice = null;
+
+    numberButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            userChoice = index + 1;
+
+            numberButtons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+
+            rollButton.disabled = false;
+        });
+    });
+
+    function createDiceFace(number) {
+        const dieface = document.createElement('div');
+        dieface.className = `die-face ${getNumberClass(number)}`;
+
+        for (let i = 1; i <= number; i++) {
+            const dot = document.createElement('span');
+            dot.className = `dice-dot dot-${i}`;
+            dieface.appendChild(dot);
+        }
+
+        return dieface;
+    }
+
+    function getNumberClass(number) {
+        const classes = ['one', 'two', 'three', 'four', 'five', 'six'];
+        return classes[number - 1];
+    }
+
+    rollButton.addEventListener('click', () => {
+        if (isRolling || userChoice === null) return;
+
+        isRolling = true;
+        rollButton.disabled = true;
+        numberButtons.forEach(btn => btn.disabled = true);
+        result.textContent = '';
+
+        const rollResult = Math.floor(Math.random() * 6) + 1;
+
+        dice.innerHTML = '';
+        dice.classList.add('rolling');
+
+        setTimeout(() => {
+            dice.classList.remove('rolling');
+            dice.innerHTML = '';
+            dice.appendChild(createDiceFace(rollResult));
+
+            result.textContent = `Rolled a ${rollResult}!`;
+
+            let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+            if (userChoice === rollResult) {
+                result.textContent += ' You guessed correctly!';
+
+                if (userData) {
+                    addCreditsToAccount(REWARD);   // ✅ FIXED
+                }
+
+                setTimeout(() => {
+                    showWinModal();
+                }, 1500);
+
+            } else {
+                result.textContent += ' Wrong guess!';
+
+                if (userData) {
+                    addCreditsToAccount(-PENALTY);   // ✅ FIXED
+                }
+
+                setTimeout(() => {
+                    resetForNextRound();
+                }, 1500);
+            }
+
+            isRolling = false;
+        }, 1000);
+    });
+
+    function resetForNextRound() {
+        userChoice = null;
+        numberButtons.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.disabled = false;
+        });
+        rollButton.disabled = true;
+        result.textContent = '';
+    }
+
+    function showWinModal() {
+        creditsEarned.textContent = REWARD;   // ✅ synced
+
+        gameArea.style.opacity = '0.5';
+        winModal.style.display = 'block';
+    }
+
+    function addCreditsToAccount(credits) {
+        try {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const currentCredits = userData.credits || 0;
+            const newCredits = currentCredits + credits;
+
+            userData.credits = Math.max(0, newCredits);
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            if (window.refreshCreditsDisplay) {
+                window.refreshCreditsDisplay();
+            }
+
+            const creditsDisplay = document.getElementById('userCredits');
+            if (creditsDisplay) {
+                creditsDisplay.textContent = userData.credits;
+            }
+
+            console.log(`Added ${credits} credits. New total: ${newCredits}`);
+        } catch (error) {
+            console.error('Error adding credits:', error);
+        }
+    }
+
+    continuePlayingButton.addEventListener('click', () => {
+        gameArea.style.opacity = '1';
+        winModal.style.display = 'none';
+        resetForNextRound();
+    });
+
+    backToGamesButton.addEventListener('click', () => {
+        window.location.href = 'games.html';
+    });
+
+    dice.innerHTML = '';
+    dice.appendChild(createDiceFace(1));
+</script>
+</body>
+
+</html>

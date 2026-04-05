@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Number Guessing Game</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #162534;
+            padding: 30px;
+            border-radius: 15px;
+            width: 360px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.2);
+        }
+
+        input {
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00e5ff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #00bcd4;
+        }
+
+        .progress {
+            height: 8px;
+            background: #333;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .bar {
+            height: 100%;
+            width: 100%;
+            background: #00e5ff;
+        }
+
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00e5ff;
+            color: black;
+            padding: 12px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>🎯 Number Guess</h1>
+        <p>Guess between 1 and 100</p>
+
+        <input type="number" id="guessInput">
+        <br>
+        <button onclick="checkGuess()">Guess</button>
+
+        <h3 id="message"></h3>
+        <h4 id="attempts"></h4>
+
+        <div class="progress">
+            <div class="bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <script>
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        const REWARD = 20;
+        const PENALTY = 5;
+        const MAX_ATTEMPTS = 10;
+
+        function checkGuess() {
+            let userGuess = Number(document.getElementById("guessInput").value);
+            attempts++;
+
+            updateProgress();
+
+            let message = "";
+
+            if (userGuess === randomNumber) {
+                message = "🎉 Correct!";
+                updateCredits(REWARD);
+                showPopup("+20 Credits 🎉");
+            } else if (userGuess > randomNumber) {
+                message = "📉 Too High!";
+                updateCredits(-PENALTY);
+            } else {
+                message = "📈 Too Low!";
+                updateCredits(-PENALTY);
+            }
+
+            document.getElementById("message").innerText = message;
+            document.getElementById("attempts").innerText = "Attempts: " + attempts;
+        }
+
+        function updateProgress() {
+            let percent = 100 - (attempts / MAX_ATTEMPTS) * 100;
+            document.getElementById("progressBar").style.width = percent + "%";
+        }
+
+        function updateCredits(amount) {
+            let userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+            if (!userData.credits) userData.credits = 100;
+
+            userData.credits = Math.max(0, userData.credits + amount);
+
+            localStorage.setItem("userData", JSON.stringify(userData));
+        }
+
+        function showPopup(text) {
+            const popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerText = text;
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => popup.remove(), 2000);
+        }
+    </script>
+
+</body>
+
+</html>

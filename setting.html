@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - GameVoucher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f1923;
+            color: #ffffff;
+            line-height: 1.6;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #162635;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #2a3a4a;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00e5ff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+
+        .logo:hover {
+            color: #00b8d4;
+        }
+
+        .logo span {
+            color: #ff3e78;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #2a3a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #00e5ff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-details {
+            font-size: 14px;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-plan {
+            color: #00e5ff;
+            font-size: 12px;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 2px 0;
+        }
+
+        .menu-item.active,
+        .menu-item:hover {
+            background-color: #1a2c3d;
+            color: #ffffff;
+            border-left: 4px solid #00e5ff;
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles - Improved */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #2a3a4a;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00e5ff;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: #00e5ff;
+            color: #0f1923;
+        }
+
+        .btn-primary:hover {
+            background-color: #00b8d4;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1px solid #2a3a4a;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: #00e5ff;
+        }
+
+        .btn-danger {
+            background-color: #ff3e78;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: #e03264;
+        }
+
+        .card {
+            background-color: #1a2a38;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #2a3a4a;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00e5ff;
+        }
+
+        /* Settings specific styles */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #a0aec0;
+        }
+
+        .form-input,
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #162534;
+            border: 1px solid #2a3a4a;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-control:focus {
+            outline: none;
+            border-color: #00e5ff;
+            box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        /* Settings Tabs */
+        .settings-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            background-color: #162534;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: #1a2c3d;
+            color: #00e5ff;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: rgba(26, 44, 61, 0.5);
+            color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Profile specific styles */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #2a3a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #00e5ff;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .profile-status {
+            flex: 1;
+        }
+
+        .profile-status h3 {
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #a0aec0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .status-badge.active {
+            background-color: rgba(0, 229, 255, 0.2);
+            color: #00e5ff;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Security specific styles */
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-heading h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #a0aec0;
+        }
+
+        .section-description {
+            color: #a0aec0;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .password-strength {
+            margin: 15px 0;
+        }
+
+        .strength-label {
+            font-size: 14px;
+            color: #a0aec0;
+            margin-bottom: 5px;
+        }
+
+        .strength-meter {
+            height: 5px;
+            background-color: #2a3a4a;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .meter-bar {
+            height: 100%;
+            width: 0;
+            background-color: #ff3e78;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #2a3a4a;
+            margin: 25px 0;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-label {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2a3a4a;
+            transition: .4s;
+            border-radius: 26px;
+        }
+
+        .toggle-label:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-label {
+            background-color: #00e5ff;
+        }
+
+        input:checked+.toggle-label:before {
+            transform: translateX(24px);
+        }
+
+        .session-list {
+            margin-bottom: 20px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #162534;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .session-item:hover {
+            background-color: #1a2c3d;
+        }
+
+        .session-item.current {
+            border-left: 3px solid #00e5ff;
+        }
+
+        .session-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #2a3a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .session-icon i {
+            font-size: 20px;
+            color: #00e5ff;
+        }
+
+        .session-details {
+            flex: 1;
+        }
+
+        .session-name {
+            font-weight: 600;
+        }
+
+        .session-info {
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        /* Subscription specific styles - Simplified */
+        .subscription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .subscription-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .subscription-badge.premium {
+            background-color: rgba(0, 229, 255, 0.2);
+            color: #00e5ff;
+        }
+
+        .subscription-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00e5ff;
+        }
+
+        .subscription-details {
+            margin-bottom: 20px;
+        }
+
+        .subscription-details p {
+            margin-bottom: 5px;
+            color: #a0aec0;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #00e5ff;
+            margin-right: 5px;
+        }
+
+        .subscription-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Responsive styles - Improved */
+        @media (max-width: 992px) {
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 15px 0;
+            }
+
+            .logo {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .sidebar-header {
+                padding: 0 10px 15px;
+            }
+
+            .user-info,
+            .logo span,
+            .user-details,
+            .menu-item span {
+                display: none;
+            }
+
+            .menu-item {
+                justify-content: center;
+                padding: 15px 0;
+            }
+
+            .menu-item i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .settings-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                flex: 0 0 auto;
+                white-space: nowrap;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo">Game<span>Voucher</span></a>
+                <div class="user-info">
+                    <div class="user-avatar" id="userInitials">JS</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">John Smith</div>
+                        <div class="user-plan" id="userPlan">Premium Plan</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="games.html" class="menu-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Games</span>
+                </a>
+                <a href="Reward.html" class="menu-item">
+                    <i class="fas fa-gift"></i>
+                    <span>Voucher Marketplace</span>
+                </a>
+                <a href="vouchers.html" class="menu-item">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>My Vouchers</span>
+                </a>
+                <a href="leaderboard.html" class="menu-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>Leaderboard</span>
+                </a>
+                <a href="history.html" class="menu-item">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </a>
+                <a href="setting.html" class="menu-item active">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="index.html" class="menu-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Settings Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1 class="page-title">Account Settings</h1>
+                <div class="header-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-coins"></i>
+                        <span id="userCredits">0</span> Credits
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Tabs - Simplified -->
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="profile">Profile</button>
+                <button class="tab-btn" data-tab="security">Security</button>
+                <button class="tab-btn" data-tab="payment">Payment Methods</button>
+                <button class="tab-btn" data-tab="subscription">Subscription</button>
+            </div>
+
+            <div class="tab-content active" id="profile-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Personal Information</h2>
+                    </div>
+                    <div class="settings-form">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <div class="avatar-preview">JS</div>
+                                <div class="avatar-actions">
+                                    <button class="btn btn-sm btn-outline">
+                                        <i class="fas fa-camera"></i> Change
+                                    </button>
+                                    <button class="btn btn-sm btn-outline">
+                                        <i class="fas fa-trash-alt"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="profile-status">
+                                <h3>Account Status</h3>
+                                <div class="status-badge active">Active</div>
+                                <p>Premium Plan - Renews in 16 days</p>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" class="form-control" value="John">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" class="form-control" value="Smith">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" class="form-control" value="john.smith@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-control" value="+1 (555) 123-4567">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" class="form-control" value="1990-01-15">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio">Bio</label>
+                            <textarea id="bio" class="form-control"
+                                rows="3">Gaming enthusiast and voucher collector. I love puzzle games and trivia challenges.</textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary">Save Changes</button>
+                            <button class="btn btn-outline">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings Tab Content -->
+            <div class="tab-content" id="security-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Security Settings</h2>
+                    </div>
+                    <div class="settings-form">
+                        <div class="section-heading">
+                            <h3>Password</h3>
+                            <p>Last changed 3 months ago</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" class="form-control">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="password-strength">
+                            <div class="strength-label">Password Strength:</div>
+                            <div class="strength-meter">
+                                <div class="meter-bar"></div>
+                            </div>
+                            <div class="strength-text">Enter a new password</div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary">Update Password</button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-heading">
+                            <h3>Two-Factor Authentication</h3>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="twoFactor" class="toggle-input">
+                                <label for="twoFactor" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <p class="section-description">Add an extra layer of security to your account by enabling
+                            two-factor authentication.</p>
+
+                        <div class="divider"></div>
+
+                        <div class="section-heading">
+                            <h3>Login Session</h3>
+                        </div>
+                        <div class="session-list">
+                            <div class="session-item current">
+                                <div class="session-icon">
+                                    <i class="fas fa-laptop"></i>
+                                </div>
+                                <div class="session-details">
+                                    <div class="session-name">MacBook Pro - Chrome</div>
+                                    <div class="session-info">Current Session • New York, USA</div>
+                                </div>
+                            </div>
+                            <div class="session-item">
+                                <div class="session-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div class="session-details">
+                                    <div class="session-name">iPhone 13 - Safari</div>
+                                    <div class="session-info">Last active 2 hours ago • New York, USA</div>
+                                </div>
+                                <button class="btn btn-sm btn-outline">Revoke</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-danger">
+                            <i class="fas fa-power-off"></i> Sign Out of All Devices
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="payment-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Payment Methods</h2>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-plus"></i> Add New
+                        </button>
+                    </div>
+                    <div class="settings-form">
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <div class="payment-icon">
+                                    <i class="fab fa-cc-visa"></i>
+                                </div>
+                                <div class="payment-details">
+                                    <h3>Visa ending in 4587</h3>
+                                    <p>Expires 08/2026 • Default</p>
+                                </div>
+                                <div class="payment-actions">
+                                    <button class="btn btn-sm btn-outline">Edit</button>
+                                    <button class="btn btn-sm btn-outline btn-danger">Remove</button>
+                                </div>
+                            </div>
+
+                            <div class="payment-method">
+                                <div class="payment-icon">
+                                    <i class="fab fa-cc-mastercard"></i>
+                                </div>
+                                <div class="payment-details">
+                                    <h3>Mastercard ending in 8901</h3>
+                                    <p>Expires 03/2025</p>
+                                </div>
+                                <div class="payment-actions">
+                                    <button class="btn btn-sm btn-outline">Edit</button>
+                                    <button class="btn btn-sm btn-outline">Set as Default</button>
+                                    <button class="btn btn-sm btn-outline btn-danger">Remove</button>
+                                </div>
+                            </div>
+
+                            <div class="payment-method">
+                                <div class="payment-icon">
+                                    <i class="fab fa-paypal"></i>
+                                </div>
+                                <div class="payment-details">
+                                    <h3>PayPal</h3>
+                                    <p>john.smith@example.com</p>
+                                </div>
+                                <div class="payment-actions">
+                                    <button class="btn btn-sm btn-outline">Edit</button>
+                                    <button class="btn btn-sm btn-outline">Set as Default</button>
+                                    <button class="btn btn-sm btn-outline btn-danger">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="section-heading">
+                            <h3>Billing Address</h3>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="address1">Address Line 1</label>
+                                <input type="text" id="address1" class="form-control" value="123 Gaming Street">
+                            </div>
+                            <div class="form-group">
+                                <label for="address2">Address Line 2</label>
+                                <input type="text" id="address2" class="form-control" value="Apt 456">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    button.classList.add('active');
+
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            const newPasswordInput = document.getElementById('newPassword');
+            const strengthMeter = document.querySelector('.meter-bar');
+            const strengthText = document.querySelector('.strength-text');
+
+            if (newPasswordInput) {
+                newPasswordInput.addEventListener('input', updatePasswordStrength);
+            }
+
+            function updatePasswordStrength() {
+                const password = newPasswordInput.value;
+                let strength = 0;
+                let status = '';
+
+                if (password.length >= 8) strength += 25;
+                if (password.match(/[A-Z]/)) strength += 25;
+                if (password.match(/[0-9]/)) strength += 25;
+                if (password.match(/[^A-Za-z0-9]/)) strength += 25;
+
+                strengthMeter.style.width = strength + '%';
+
+                if (strength <= 25) {
+                    strengthMeter.style.backgroundColor = '#ff3e78';
+                    status = 'Weak';
+                } else if (strength <= 50) {
+                    strengthMeter.style.backgroundColor = '#ffa500';
+                    status = 'Fair';
+                } else if (strength <= 75) {
+                    strengthMeter.style.backgroundColor = '#ffd700';
+                    status = 'Good';
+                } else {
+                    strengthMeter.style.backgroundColor = '#00e5ff';
+                    status = 'Strong';
+                }
+
+                strengthText.textContent = password.length > 0 ? status : 'Enter a new password';
+            }
+
+            const profileForm = document.querySelector('#profile-tab .settings-form');
+            if (profileForm) {
+                const saveButton = profileForm.querySelector('.btn-primary');
+                saveButton.addEventListener('click', saveProfileChanges);
+            }
+
+            function saveProfileChanges(e) {
+                e.preventDefault();
+
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+
+                if (!firstName || !lastName || !email) {
+                    showNotification('Please fill in all required fields', 'error');
+                    return;
+                }
+
+                showNotification('Profile updated successfully!', 'success');
+
+                updateUserInfo(firstName, lastName);
+            }
+
+            const passwordForm = document.querySelector('#security-tab .form-actions');
+            if (passwordForm) {
+                const updateButton = passwordForm.querySelector('.btn-primary');
+                updateButton.addEventListener('click', updatePassword);
+            }
+
+            function updatePassword(e) {
+                e.preventDefault();
+
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showNotification('Please fill in all password fields', 'error');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+
+                showNotification('Password updated successfully!', 'success');
+
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                strengthMeter.style.width = '0%';
+                strengthText.textContent = 'Enter a new password';
+            }
+            const twoFactorToggle = document.getElementById('twoFactor');
+            if (twoFactorToggle) {
+                twoFactorToggle.addEventListener('change', toggleTwoFactor);
+            }
+
+            function toggleTwoFactor() {
+                const isEnabled = twoFactorToggle.checked;
+
+                if (isEnabled) {
+                    showNotification('Two-factor authentication enabled', 'success');
+                } else {
+                    showNotification('Two-factor authentication disabled', 'info');
+                }
+            }
+
+            const revokeButtons = document.querySelectorAll('.session-item .btn-outline');
+            revokeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const sessionItem = this.closest('.session-item');
+                    sessionItem.style.opacity = '0.5';
+                    sessionItem.style.pointerEvents = 'none';
+                    showNotification('Session revoked successfully', 'success');
+
+                });
+            });
+
+            const signOutAllButton = document.querySelector('.btn-danger');
+            if (signOutAllButton) {
+                signOutAllButton.addEventListener('click', function () {
+                    if (confirm("Are you sure you want to sign out of all devices?")) {
+                        showNotification('Signed out of all devices', 'success');
+
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    }
+                });
+            }
+
+            const avatarButtons = document.querySelectorAll('.avatar-actions .btn');
+            if (avatarButtons.length) {
+                avatarButtons[0].addEventListener('click', function () {
+                    const avatar = document.querySelector('.avatar-preview');
+                    avatar.style.backgroundColor = getRandomColor();
+                });
+
+                avatarButtons[1].addEventListener('click', function () {
+                    const avatar = document.querySelector('.avatar-preview');
+                    avatar.style.backgroundColor = '#2a3a4a';
+                    avatar.textContent = getUserInitials();
+                });
+            }
+
+            function updateUserInfo(firstName, lastName) {
+                const userInitials = document.getElementById('userInitials');
+                const userName = document.getElementById('userName');
+
+                if (userInitials && userName) {
+                    userInitials.textContent = firstName.charAt(0) + lastName.charAt(0);
+                    userName.textContent = firstName + ' ' + lastName;
+                }
+            }
+
+            function getUserInitials() {
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                return firstName.charAt(0) + lastName.charAt(0);
+            }
+
+            function getRandomColor() {
+                const colors = ['#00e5ff', '#ff3e78', '#ffd700', '#4CAF50', '#9C27B0'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            function showNotification(message, type = 'info') {
+                let notificationContainer = document.querySelector('.notification-container');
+                if (!notificationContainer) {
+                    notificationContainer = document.createElement('div');
+                    notificationContainer.className = 'notification-container';
+                    notificationContainer.style.position = 'fixed';
+                    notificationContainer.style.bottom = '20px';
+                    notificationContainer.style.right = '20px';
+                    notificationContainer.style.zIndex = '1000';
+                    document.body.appendChild(notificationContainer);
+                }
+
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+
+                notification.style.backgroundColor = type === 'success' ? '#00e5ff' :
+                    type === 'error' ? '#ff3e78' :
+                        type === 'warning' ? '#ffd700' : '#1a2a38';
+                notification.style.color = '#fff';
+                notification.style.padding = '12px 20px';
+                notification.style.marginBottom = '10px';
+                notification.style.borderRadius = '5px';
+                notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(20px)';
+                notification.style.transition = 'all 0.3s ease';
+
+                notificationContainer.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 10);
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(20px)';
+
+                    setTimeout(() => {
+                        notificationContainer.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    showNotification('Logging out...', 'info');
+
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                });
+            }
+
+            const paymentActions = document.querySelectorAll('.payment-actions .btn');
+            paymentActions.forEach(button => {
+                button.addEventListener('click', function () {
+                    const action = this.textContent.trim();
+                    const paymentMethod = this.closest('.payment-method');
+                    const paymentName = paymentMethod.querySelector('h3').textContent;
+
+                    if (action === 'Remove') {
+                        if (confirm(`Are you sure you want to remove ${paymentName}?`)) {
+                            paymentMethod.style.opacity = '0.5';
+                            paymentMethod.style.pointerEvents = 'none';
+                            showNotification(`${paymentName} removed`, 'success');
+                        }
+                    } else if (action === 'Set as Default') {
+                        document.querySelectorAll('.payment-details p').forEach(p => {
+                            p.textContent = p.textContent.replace(' • Default', '');
+                        });
+
+                        const details = paymentMethod.querySelector('.payment-details p');
+                        if (!details.textContent.includes('Default')) {
+                            details.textContent += ' • Default';
+                        }
+
+                        showNotification(`${paymentName} set as default payment method`, 'success');
+                    } else if (action === 'Edit') {
+                        showNotification(`Editing ${paymentName}`, 'info');
+                    }
+                });
+            });
+
+            updateUserCredits();
+
+            function updateUserCredits() {
+                const userCredits = document.getElementById('userCredits');
+                if (userCredits) {
+                    const credits = Math.floor(Math.random() * 400) + 100;
+                    userCredits.textContent = credits;
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
